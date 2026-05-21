@@ -7,9 +7,11 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import org.springframework.http.ResponseEntity;
 
 
 @RestController
@@ -42,4 +44,14 @@ class OrderController {
         return assembler.toModel(order);
     }
 
+    @PostMapping("/orders")
+    ResponseEntity<EntityModel<Order>> newOrder(@RequestBody Order order) {
+
+        order.setStatus(Status.IN_PROGRESS);
+        Order newOrder = orderRepository.save(order);
+
+        return ResponseEntity
+            .created(linkTo(methodOn(OrderController.class).one(newOrder.getId())).getUri())
+            .body(assembler.toModel(newOrder));
+    }
 }
