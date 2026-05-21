@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,7 @@ class OrderController {
         Order newOrder = orderRepository.save(order);
 
         return ResponseEntity
-            .created(linkTo(methodOn(OrderController.class).one(newOrder.getId())).getUri())
+            .created(linkTo(methodOn(OrderController.class).one(newOrder.getId())).toUri())
             .body(assembler.toModel(newOrder));
     }
 }
